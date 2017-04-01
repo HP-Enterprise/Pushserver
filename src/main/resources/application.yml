@@ -1,0 +1,28 @@
+
+# MQTT Acquire Config
+com.hp.pushserver.mqtt.acquire:
+    #是否禁用MQTT监听
+    disabled: false
+    #MQTT服务监听端口
+    serverAddress: 127.0.0.1:1884
+    userName: jackl
+    password: 123456
+    clientId: pushserver
+    #消费的topic 多个以半角逗号分隔
+    subscribeTopic: /s/lv8918,/s/lm8917
+    publicTopicPrefix: /d/
+
+#MQ服务器相关信息
+com.hp.pushserver.mq:
+    exchangeName: exchange
+    host: 127.0.0.1
+    port: 5672
+    userName: jackl
+    password: 123456
+    #消费的routKeys 多个以半角逗号分隔
+    consumeRouteKeys: device.replay
+    publishActionRouteKey: device.action
+
+# Spring settings
+spring:
+    profiles.active: dev
