@@ -35,8 +35,6 @@ public class Application implements CommandLineRunner{
 
     @Value("${com.hp.pushserver.mq.publishActionRouteKey}")
     private String publishActionRouteKey;
-    @Value("${com.hp.pushserver.mq.publishDataRouteKey}")
-    private String publishDataRouteKey;
 
 
 
@@ -70,7 +68,7 @@ public class Application implements CommandLineRunner{
         _logger.info("Pushserver正在启动...");
 
         if (!_mqttDisabled) {
-            MqttWorker mqttWorkerThread = new MqttWorker(_mqttServerAddress, mqttConsumerFactory, mqttPublishFactory, mqPublishFactory, mqConsumerFactory, publishActionRouteKey, publishDataRouteKey);
+            MqttWorker mqttWorkerThread = new MqttWorker(_mqttServerAddress, mqttConsumerFactory, mqttPublishFactory, mqPublishFactory, mqConsumerFactory, publishActionRouteKey, null);
             Thread mqttWorker = new Thread(mqttWorkerThread);
             mqttWorker.setName("mqtt-worker");
             mqttWorker.start();

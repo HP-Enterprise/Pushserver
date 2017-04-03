@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.SerializationUtils;
 
 import java.io.IOException;
 import java.util.concurrent.*;
@@ -58,7 +59,7 @@ public class MQConsumerFactory {
         channel = connection.createChannel();
         //declaring a queue for this channel. If queue does not exist,
         //it will be created on the server.
-        channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        channel.queueDeclare(QUEUE_NAME, true, false, false, null);
         channel.exchangeDeclare(exchangeName, "topic");
     }
 
@@ -78,14 +79,15 @@ public class MQConsumerFactory {
                 init();
             }
             for (String rKey : routeKeys) {
-                channel.queueBind(QUEUE_NAME, null, rKey);
+                channel.queueBind(QUEUE_NAME, exchangeName, rKey);
             }
             _logger.info(" [*]开始接收处理带以下routeKeys的消息:"+ JSON.toJSON(routeKeys));
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,
                                            AMQP.BasicProperties properties, byte[] body) throws IOException {
-                    String message = new String(body, "UTF-8");
+                    //String message = new String(body, "UTF-8");
+                    String message = (String)SerializationUtils.deserialize(body);
                     handleMessage(message);
                 }
             };
