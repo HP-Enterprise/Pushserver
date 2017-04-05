@@ -39,6 +39,7 @@ public class MqttPublishFactory {
         conOptions.setUserName(mqttUserName);
         conOptions.setPassword(mqttPassword.toCharArray());
         conOptions.setCleanSession(true);
+        conOptions.setMaxInflight(128);
         //conOptions.setWill(lwtTopic, "will msg".getBytes(), 1, true);
 
         client.connect(conOptions);
