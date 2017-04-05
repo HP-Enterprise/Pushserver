@@ -20,6 +20,6 @@ public class MqttServer {
     }
     public void receive(){
         mqttConsumerFactory.setExecutorService(executorService);
-        mqttConsumerFactory.receiveMessage();
+       // mqttConsumerFactory.receiveMessage(); 不需要通过MQTT接收消息
     }
 }

@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.SerializationUtils;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by jackl on 2017/3/4.
@@ -20,6 +23,10 @@ public class MqttPublishFactory {
     private String mqttPassword="";
     @Value("${com.hp.pushserver.mqtt.acquire.clientId}")
     private String mqttClientId="";
+
+    @Value("${com.hp.pushserver.mq.serializeMode}")
+    private int serializeMode;
+
 
     private MqttClient client ;
     private MemoryPersistence persistence;
@@ -51,15 +58,26 @@ public class MqttPublishFactory {
             checkConnection();
             MqttTopic topic = client.getTopic(publishTopic);
             _logger.info("发往"+publishTopic+"的消息:" + msg);
-            MqttMessage message = new MqttMessage(msg.getBytes());
+            //序列化模式
+            byte[] bytes=msg.getBytes("UTF-8");
+            if(serializeMode==2) {
+                bytes = SerializationUtils.serialize(msg);
+            }
+            MqttMessage message = new MqttMessage(bytes);
             message.setQos(1);
+            message.setRetained(true);
             //     while(true){
+
             MqttDeliveryToken token = topic.publish(message);
             while (!token.isComplete()){
                 token.waitForCompletion(5000);
             }
             //     }
-        } catch (MqttException e) {
+        }catch (UnsupportedEncodingException ee){
+            _logger.error(ee.getMessage());
+            ee.printStackTrace();
+        }catch (MqttException e) {
+            _logger.error(e.getMessage());
             e.printStackTrace();
         }
     }

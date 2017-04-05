@@ -34,7 +34,10 @@ public class MQConsumerFactory {
     private  String password;
     @Value("${com.hp.pushserver.mq.consumeRouteKeys}")
     private  String consumeRouteKeys;
-
+    @Value("${com.hp.pushserver.mq.durable}")
+    private  boolean durable;
+    @Value("${com.hp.pushserver.mq.serializeMode}")
+    private int serializeMode;
     @Autowired
     private DataTool dataTool;
 
@@ -59,7 +62,7 @@ public class MQConsumerFactory {
         channel = connection.createChannel();
         //declaring a queue for this channel. If queue does not exist,
         //it will be created on the server.
-        channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+        channel.queueDeclare(QUEUE_NAME, durable, false, false, null);
         channel.exchangeDeclare(exchangeName, "topic");
     }
 
@@ -87,7 +90,11 @@ public class MQConsumerFactory {
                 public void handleDelivery(String consumerTag, Envelope envelope,
                                            AMQP.BasicProperties properties, byte[] body) throws IOException {
                     //String message = new String(body, "UTF-8");
-                    String message = (String)SerializationUtils.deserialize(body);
+                    String message = new String(body, "UTF-8");
+                    if(serializeMode==2) {
+                        message = (String)SerializationUtils.deserialize(body);
+                    }
+
                     handleMessage(message);
                 }
             };

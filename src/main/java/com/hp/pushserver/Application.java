@@ -33,13 +33,6 @@ public class Application implements CommandLineRunner{
     MqttPublishFactory mqttPublishFactory;
 
 
-    @Value("${com.hp.pushserver.mq.publishActionRouteKey}")
-    private String publishActionRouteKey;
-
-
-
-    @Value("${com.hp.pushserver.mqtt.acquire.disabled}")
-    private boolean _mqttDisabled;
     @Value("${com.hp.pushserver.mqtt.acquire.serverAddress}")
     private String _mqttServerAddress="";
     @Value("${com.hp.pushserver.mqtt.acquire.userName}")
@@ -62,17 +55,13 @@ public class Application implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-
         // 启动数据接受程序
-
         _logger.info("Pushserver正在启动...");
 
-        if (!_mqttDisabled) {
-            MqttWorker mqttWorkerThread = new MqttWorker(_mqttServerAddress, mqttConsumerFactory, mqttPublishFactory, mqPublishFactory, mqConsumerFactory, publishActionRouteKey, null);
-            Thread mqttWorker = new Thread(mqttWorkerThread);
-            mqttWorker.setName("mqtt-worker");
-            mqttWorker.start();
-        }
+        MqttWorker mqttWorkerThread = new MqttWorker(_mqttServerAddress, mqttConsumerFactory, mqttPublishFactory, mqPublishFactory, mqConsumerFactory);
+        Thread mqttWorker = new Thread(mqttWorkerThread);
+        mqttWorker.setName("mqtt-worker");
+        mqttWorker.start();
         mqConsumerFactory.receiveMessage();//接收MQ消息
 
     }

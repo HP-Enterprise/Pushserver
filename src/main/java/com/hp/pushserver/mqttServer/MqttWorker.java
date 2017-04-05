@@ -17,19 +17,17 @@ public class MqttWorker implements Runnable{
     private MqttPublishFactory mqttPublishFactory;
     private MQPublishFactory mqPublishFactory;
     private MQConsumerFactory mqConsumerFactory;
-    private String publishActionRouteKey;
-    private String publishDataRouteKey;
+
     private Logger _logger= LoggerFactory.getLogger(getClass());
 
 
-    public MqttWorker(String mqttServerAddress, MqttConsumerFactory mqttConsumerFactory, MqttPublishFactory mqttPublishFactory, MQPublishFactory mqPublishFactory, MQConsumerFactory mqConsumerFactory, String publishActionRouteKey, String publishDataRouteKey) {
+    public MqttWorker(String mqttServerAddress, MqttConsumerFactory mqttConsumerFactory, MqttPublishFactory mqttPublishFactory, MQPublishFactory mqPublishFactory, MQConsumerFactory mqConsumerFactory) {
         this.mqttServerAddress = mqttServerAddress;
         this.mqttConsumerFactory = mqttConsumerFactory;
         this.mqttPublishFactory = mqttPublishFactory;
         this.mqPublishFactory = mqPublishFactory;
         this.mqConsumerFactory = mqConsumerFactory;
-        this.publishActionRouteKey = publishActionRouteKey;
-        this.publishDataRouteKey = publishDataRouteKey;
+
     }
     ScheduledExecutorService executorService = Executors.newScheduledThreadPool(10);
 

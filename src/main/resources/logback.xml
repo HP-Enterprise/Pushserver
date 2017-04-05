@@ -12,7 +12,7 @@
         </layout>
     </appender>
     <appender name="STANDARD"  class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/server.log</file>
+        <file>${LOG_HOME}/Pushserver.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${LOG_HOME}/server.%d{yyyy-MM-dd}.log</FileNamePattern>
             <MaxHistory>30</MaxHistory>
@@ -27,14 +27,9 @@
     <logger name="ch.qos.logback" level="OFF"/>
     <logger name="org.springframework" level="ERROR"/>
     <!-- 日志输出级别 -->
-  <!--  <logger name="com" level="INFO" additivity="true">
+   <logger name="com" level="INFO" additivity="true">
         <appender-ref ref="STANDARD"/>
-        <appender-ref ref="STDOUT"/>
     </logger>
-    <logger name="io" level="INFO" additivity="true">
-        <appender-ref ref="STANDARD"/>
-        <appender-ref ref="STDOUT"/>
-    </logger>-->
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
