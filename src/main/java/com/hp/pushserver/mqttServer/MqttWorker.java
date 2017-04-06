@@ -33,7 +33,7 @@ public class MqttWorker implements Runnable{
 
     @Override
     public void run() {
-      _logger.info("MQTT协议服务启动成功,服务器信息："+mqttServerAddress);
+      _logger.info("MQTT服务器连接成功,服务器信息："+mqttServerAddress);
         MqttServer mqttServer=new MqttServer(mqttConsumerFactory,mqttPublishFactory,executorService);
         mqttServer.receive();
     }

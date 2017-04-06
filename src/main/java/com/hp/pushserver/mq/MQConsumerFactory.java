@@ -84,7 +84,7 @@ public class MQConsumerFactory {
             for (String rKey : routeKeys) {
                 channel.queueBind(QUEUE_NAME, exchangeName, rKey);
             }
-            _logger.info(" [*]开始接收处理带以下routeKeys的消息:"+ JSON.toJSON(routeKeys));
+            _logger.info("RabbitMQ连接成功，开始接收处理带以下routeKeys的消息:"+ JSON.toJSON(routeKeys));
             Consumer consumer = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope,
@@ -99,9 +99,9 @@ public class MQConsumerFactory {
                 }
             };
             channel.basicConsume(QUEUE_NAME, true, consumer);
-        }catch (IOException ie){
-            _logger.error("MQ异常:" + ie.getMessage());
-        }catch (TimeoutException te){
+        }catch (IOException te){
+            _logger.error("MQ异常:" + te.toString());
+        }      catch (TimeoutException te){
             _logger.error("MQ异常:" + te.getMessage());
         }
     }

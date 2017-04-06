@@ -1,6 +1,9 @@
 package com.hp.pushserver.mqttServer;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
+import com.hp.pushserver.model.Notification;
+import com.hp.pushserver.model.NotificationFactory;
 import com.hp.pushserver.utils.DataTool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +26,7 @@ public class MqttRespTask implements Runnable{
         this.mqttPublishFactory = mqttPublishFactory;
     }
 
-    @Override
+   /* @Override
     public void run() {
         _logger.info("准备发送消息到设备:"+msg);
         Map<String,Object> dataMap = (Map<String,Object>) JSON.parse(msg);
@@ -37,5 +40,23 @@ public class MqttRespTask implements Runnable{
             }
         }
 
+    }*/
+
+
+
+    @Override
+    public void run() {
+        _logger.info("准备发送消息到设备:"+msg);
+        List<Notification> notifications;
+        try {
+            notifications = NotificationFactory.buildNotifications(msg);
+            _logger.debug(notifications.toString());
+            for (Notification n : notifications) {
+                mqttPublishFactory.publish(n.getToken(),n.toString());
+                break;
+            }
+        } catch (JSONException e) {
+           _logger.error(e.getMessage());
+        }
     }
 }

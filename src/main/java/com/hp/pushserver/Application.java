@@ -63,6 +63,7 @@ public class Application implements CommandLineRunner{
         mqttWorker.setName("mqtt-worker");
         mqttWorker.start();
         mqConsumerFactory.receiveMessage();//接收MQ消息
+        mqttPublishFactory.init();
 
     }
 

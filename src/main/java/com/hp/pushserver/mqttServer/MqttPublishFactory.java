@@ -32,7 +32,7 @@ public class MqttPublishFactory {
     private MemoryPersistence persistence;
     private String lwtTopic= "lwt" ;
     private Logger _logger= LoggerFactory.getLogger(getClass());
-    private void init() throws MqttException{
+    public void init() throws MqttException{
         _logger.info("初始化MQTT连接>>>>>>>>>>>>>>>.");
         client=new MqttClient("tcp://"+mqttServerAddress,mqttClientId+"_publisher");
         MqttConnectOptions conOptions = new MqttConnectOptions();
@@ -61,9 +61,10 @@ public class MqttPublishFactory {
             _logger.info("发往"+publishTopic+"的消息:" + msg);
             //序列化模式
             byte[] bytes=msg.getBytes("UTF-8");
-            if(serializeMode==2) {
+            //发往MQTT的消息不序列化，字符串转字节数组
+           /* if(serializeMode==2) {
                 bytes = SerializationUtils.serialize(msg);
-            }
+            }*/
             MqttMessage message = new MqttMessage(bytes);
             message.setQos(1);
             message.setRetained(true);
